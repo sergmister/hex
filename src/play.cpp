@@ -2,4 +2,8 @@
 
 #include "game.hpp"
 
-int main(void) { std::cout << "Test" << std::endl; }
+int main(void) {
+    HexBoard b;
+    HexState h(b);
+    h.print();
+}
