@@ -108,9 +108,9 @@ bool HexState::move(uint16_t pos) {
         case CellState::White: {
             bool west_connected = false;
             bool east_connected = false;
-            if (pos % BOARD_HEIGHT == 0) {  // First column
+            if (pos % BOARD_WIDTH == 0) {  // First column
                 west_connected = true;
-            } else if (pos % BOARD_HEIGHT == BOARD_HEIGHT - 1) {  // Last column
+            } else if (pos % BOARD_WIDTH == BOARD_WIDTH - 1) {  // Last column
                 east_connected = true;
             }
             for (uint8_t i = 0; i < hexBoard.neighbor_list[pos].size; i++) {
@@ -142,28 +142,28 @@ bool HexState::move(uint16_t pos) {
 }
 
 std::string StateToString(CellState state) {
-  switch (state) {
-    case CellState::Empty:
-      return ".";
-    case CellState::White:
-      return "o";
-    case CellState::WhiteWin:
-      return "O";
-    case CellState::WhiteWest:
-      return "p";
-    case CellState::WhiteEast:
-      return "q";
-    case CellState::Black:
-      return "x";
-    case CellState::BlackWin:
-      return "X";
-    case CellState::BlackNorth:
-      return "y";
-    case CellState::BlackSouth:
-      return "z";
-    default:
-      return "This will never return.";
-  }
+    switch (state) {
+        case CellState::Empty:
+            return ".";
+        case CellState::White:
+            return "o";
+        case CellState::WhiteWin:
+            return "O";
+        case CellState::WhiteWest:
+            return "p";
+        case CellState::WhiteEast:
+            return "q";
+        case CellState::Black:
+            return "x";
+        case CellState::BlackWin:
+            return "X";
+        case CellState::BlackNorth:
+            return "y";
+        case CellState::BlackSouth:
+            return "z";
+        default:
+            return "This will never return.";
+    }
 }
 
 void HexState::print() {
