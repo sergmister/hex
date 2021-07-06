@@ -41,7 +41,7 @@ HexBoard::HexBoard() {
 
 HexState::HexState(HexBoard& hexBoard)
     : hexBoard(hexBoard), currentPlayer(CellState::Black) {
-    // std::fill_n(board, 6, CellState::Empty);
+    std::fill_n(board, BOARD_SIZE, CellState::Empty);
 }
 
 void HexState::bfs(uint16_t pos, CellState move_cell_state) {
@@ -79,7 +79,7 @@ bool HexState::move(uint16_t pos) {
             bool south_connected = false;
             if (pos < BOARD_WIDTH) {  // First row
                 north_connected = true;
-            } else if (pos >= BOARD_SIZE - BOARD_WIDTH) {  // Last row
+            } else if (pos >= (BOARD_SIZE - BOARD_WIDTH)) {  // Last row
                 south_connected = true;
             }
             for (uint8_t i = 0; i < hexBoard.neighbor_list[pos].size; i++) {
@@ -103,6 +103,7 @@ bool HexState::move(uint16_t pos) {
             } else {
                 board[pos] = CellState::Black;
             }
+            break;
         }
         case CellState::White: {
             bool west_connected = false;
@@ -133,6 +134,7 @@ bool HexState::move(uint16_t pos) {
             } else {
                 board[pos] = CellState::White;
             }
+            break;
         }
     }
 

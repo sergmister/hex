@@ -15,5 +15,11 @@ uint16_t get_move_input(HexState state) {
 
 main(void) {
     HexBoard b = HexBoard();
-    std::cout << b.neighbor_list << std::endl;
+    HexState s = HexState(b);
+    s.currentPlayer = CellState::White;
+    std::cout << s.move(0) << std::endl;
+    std::cout << s.move(1) << std::endl;
+    std::cout << s.move(2) << std::endl;
+    std::cout << s.move(3) << std::endl;
+    s.print();
 }
