@@ -168,19 +168,19 @@ std::string StateToString(CellState state) {
 
 void HexState::print() {
     std::string str;
-    for (int i = 0; i < BOARD_HEIGHT; i++) {
+    for (int i = 0; i < BOARD_WIDTH; i++) {
         str += " ";
         str += (char)('a' + i);
     }
     str += "\n";
-    for (int i = 0; i < BOARD_WIDTH; i++) {
-        for (int j = 0; j < i; j++) {
+    for (int y = 0; y < BOARD_HEIGHT; y++) {
+        for (int i = 0; i < y; i++) {
             str += " ";
         }
-        str += std::to_string(i + 1);
-        for (int j = 0; j < BOARD_HEIGHT; j++) {
+        str += std::to_string(y + 1);
+        for (int x = 0; x < BOARD_WIDTH; x++) {
             str += " ";
-            str += StateToString(board[IX(i, j)]);
+            str += StateToString(board[IX(x, y)]);
         }
         str += "\n";
     }
