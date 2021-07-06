@@ -13,7 +13,8 @@ uint16_t get_move_input(HexState state) {
     }
 }
 
-main(void) {
+int main(void) {
     HexBoard b = HexBoard();
-    std::cout << b.neighbor_list << std::endl;
+    HexState h(b);
+    h.print();
 }

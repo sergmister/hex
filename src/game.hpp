@@ -1,8 +1,8 @@
 #pragma once
 #include <cstdint>
 
-const uint16_t BOARD_WIDTH = 4;
-const uint16_t BOARD_HEIGHT = 4;
+const uint16_t BOARD_WIDTH = 12;
+const uint16_t BOARD_HEIGHT = 12;
 const uint16_t BOARD_SIZE = BOARD_WIDTH * BOARD_HEIGHT;
 
 enum struct CellState {
