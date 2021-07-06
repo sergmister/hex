@@ -1,9 +1,11 @@
 #pragma once
 #include <cstdint>
 
-const uint16_t BOARD_WIDTH = 4;
+const uint16_t BOARD_WIDTH = 6;
 const uint16_t BOARD_HEIGHT = 6;
 const uint16_t BOARD_SIZE = BOARD_WIDTH * BOARD_HEIGHT;
+
+inline uint16_t IX(uint16_t x, uint16_t y) { return y * BOARD_WIDTH + x; }
 
 enum struct CellState {
     Empty = 0,
