@@ -5,11 +5,12 @@
 #include "game.hpp"
 
 uint16_t get_move_input(HexState state) {
-    std::cout << (state.currentPlayer == CellState::Black ? "B" : "W")
-              << " => ";
     std::string input;
     while (true) {
+        std::cout << (state.currentPlayer == CellState::Black ? "B" : "W")
+                << " => ";
         std::cin >> input;
+        
     }
 }
 

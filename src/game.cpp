@@ -10,7 +10,7 @@ extern const uint16_t BOARD_WIDTH;
 extern const uint16_t BOARD_HEIGHT;
 extern const uint16_t BOARD_SIZE;
 
-inline uint16_t IX(uint16_t x, uint16_t y) { return y + x * BOARD_HEIGHT; }
+inline uint16_t IX(uint16_t x, uint16_t y) { return y * BOARD_WIDTH + x; }
 
 HexBoard::HexBoard() {
     for (uint16_t x = 0; x < BOARD_WIDTH; x++) {
