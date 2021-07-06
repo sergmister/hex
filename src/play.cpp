@@ -13,7 +13,7 @@ uint16_t get_move_input(HexState state) {
     }
 }
 
-main(void) {
+int main(void) {
     HexBoard b = HexBoard();
     HexState s = HexState(b);
     s.currentPlayer = CellState::White;

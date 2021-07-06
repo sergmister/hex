@@ -141,8 +141,38 @@ bool HexState::move(uint16_t pos) {
     return false;
 }
 
+std::string StateToString(CellState state) {
+  switch (state) {
+    case CellState::Empty:
+      return ".";
+    case CellState::White:
+      return "o";
+    case CellState::WhiteWin:
+      return "O";
+    case CellState::WhiteWest:
+      return "p";
+    case CellState::WhiteEast:
+      return "q";
+    case CellState::Black:
+      return "x";
+    case CellState::BlackWin:
+      return "X";
+    case CellState::BlackNorth:
+      return "y";
+    case CellState::BlackSouth:
+      return "z";
+    default:
+      return "This will never return.";
+  }
+}
+
 void HexState::print() {
     std::string str;
+    for (int i = 0; i < BOARD_HEIGHT; i++) {
+        str += " ";
+        str += (char)('a' + i);
+    }
+    str += "\n";
     for (int i = 0; i < BOARD_SIZE; i++) {
         int row = i / BOARD_WIDTH;
         int col = i % BOARD_WIDTH;
@@ -150,17 +180,10 @@ void HexState::print() {
             for (int j = 0; j < row; j++) {
                 str += " ";
             }
+            str += std::to_string(row + 1);
         }
         str += " ";
-        if (board[i] == CellState::Empty) {
-            str += ".";
-        } else if (board[i] == CellState::White) {
-            str += "o";
-        } else if (board[i] == CellState::Black) {
-            str += "x";
-        } else {
-            str += ".";
-        }
+        str += StateToString(board[i]);
         if (col == BOARD_WIDTH - 1) {
             str += "\n";
         }
