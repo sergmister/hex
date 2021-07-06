@@ -4,27 +4,63 @@
 
 #include "game.hpp"
 
+extern const uint16_t BOARD_WIDTH;
+extern const uint16_t BOARD_HEIGHT;
+extern const uint16_t BOARD_SIZE;
+
 uint16_t get_move_input(HexState state) {
-    std::cout << (state.currentPlayer == CellState::Black ? "B" : "W")
-              << " => ";
     std::string input;
     while (true) {
-        std::cin >> input;
+        std::cout << (state.currentPlayer == CellState::Black ? "B" : "W")
+                  << " => ";
+        getline(std::cin, input);
+        if (input.length() < 2) {
+            std::cout << "invalid" << std::endl;
+            continue;
+        }
+        char letter = input.at(0);
+        uint16_t number;
+        try {
+            number = std::stoi(input.substr(1));
+        } catch (...) {
+            std::cout << "invalid" << std::endl;
+            continue;
+        }
+        uint16_t x, y;
+        if (letter >= 'a' && letter < ('a' + BOARD_WIDTH)) {
+            x = letter - 'a';
+        } else {
+            std::cout << "invalid" << std::endl;
+            continue;
+        }
+        if (number >= 1 && number <= BOARD_HEIGHT) {
+            y = number - 1;
+        } else {
+            std::cout << "invalid" << std::endl;
+            continue;
+        }
+        uint16_t pos = IX(x, y);
+        if (state.board[pos] == CellState::Empty) {
+            return pos;
+        } else {
+            std::cout << "invalid" << std::endl;
+            continue;
+        }
     }
 }
 
 int main() {
     HexBoard b = HexBoard();
     HexState s = HexState(b);
-    s.currentPlayer = CellState::Black;
-    std::cout << s.move(0) << std::endl;
-    std::cout << s.move(1) << std::endl;
-    std::cout << s.move(2) << std::endl;
-    std::cout << s.move(3) << std::endl;
-    std::cout << s.move(4) << std::endl;
-    std::cout << s.move(8) << std::endl;
-    std::cout << s.move(12) << std::endl;
-    std::cout << s.move(16) << std::endl;
-    // std::cout << s.move(20) << std::endl;
+
+    while (true) {
+        s.print();
+        uint16_t move = get_move_input(s);
+        if (s.move(move)) {
+            break;
+        }
+    }
     s.print();
+    std::cout << (s.currentPlayer == CellState::Black ? "Black" : "White")
+              << " wins!" << std::endl;
 }
