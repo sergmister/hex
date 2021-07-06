@@ -173,20 +173,16 @@ void HexState::print() {
         str += (char)('a' + i);
     }
     str += "\n";
-    for (int i = 0; i < BOARD_SIZE; i++) {
-        int row = i / BOARD_WIDTH;
-        int col = i % BOARD_WIDTH;
-        if (col == 0) {
-            for (int j = 0; j < row; j++) {
-                str += " ";
-            }
-            str += std::to_string(row + 1);
+    for (int i = 0; i < BOARD_WIDTH; i++) {
+        for (int j = 0; j < i; j++) {
+            str += " ";
         }
-        str += " ";
-        str += StateToString(board[i]);
-        if (col == BOARD_WIDTH - 1) {
-            str += "\n";
+        str += std::to_string(i + 1);
+        for (int j = 0; j < BOARD_HEIGHT; j++) {
+            str += " ";
+            str += StateToString(board[IX(i, j)]);
         }
+        str += "\n";
     }
     std::cout << str;
 }
