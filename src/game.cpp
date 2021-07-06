@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cstdint>
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -9,7 +10,7 @@ extern const uint16_t BOARD_WIDTH;
 extern const uint16_t BOARD_HEIGHT;
 extern const uint16_t BOARD_SIZE;
 
-#define IX(x, y) ((y) + (x) * (BOARD_HEIGHT));
+inline uint16_t IX(uint16_t x, uint16_t y) { return y + x * BOARD_HEIGHT; }
 
 HexBoard::HexBoard() {
     for (uint16_t x = 0; x < BOARD_WIDTH; x++) {
@@ -75,6 +76,7 @@ bool HexState::move(uint16_t pos) {
             }
             if (north_connected && south_connected) {
                 board[pos] = CellState::BlackWin;
+                return true;
             } else if (north_connected) {
                 board[pos] = CellState::BlackNorth;
                 bfs(pos, CellState::BlackNorth);
@@ -104,6 +106,7 @@ bool HexState::move(uint16_t pos) {
             }
             if (west_connected && east_connected) {
                 board[pos] = CellState::WhiteWin;
+                return true;
             } else if (west_connected) {
                 board[pos] = CellState::WhiteWest;
                 bfs(pos, CellState::WhiteWest);
@@ -115,6 +118,8 @@ bool HexState::move(uint16_t pos) {
             }
         }
     }
+
+    return false;
 }
 
 void HexState::print() {
@@ -135,7 +140,7 @@ void HexState::print() {
             }
         }
         str += " ";
-        if (row == board.WIDTH - 1) str += "\n";
+        if (row == BOARD_WIDTH - 1) str += "\n";
     }
     std::cout << str;
 }
