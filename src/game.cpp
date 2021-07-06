@@ -136,6 +136,6 @@ void HexState::print() {
         }
         str += " ";
         if (row == board.WIDTH - 1) str += "\n";
-    }
+    } 
     std::cout << str;
 }
