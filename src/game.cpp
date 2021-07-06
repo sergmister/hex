@@ -5,7 +5,6 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <iostream>
 
 extern const uint16_t BOARD_WIDTH;
 extern const uint16_t BOARD_HEIGHT;
@@ -16,8 +15,25 @@ inline uint16_t IX(uint16_t x, uint16_t y) { return y + x * BOARD_HEIGHT; }
 HexBoard::HexBoard() {
     for (uint16_t x = 0; x < BOARD_WIDTH; x++) {
         for (uint16_t y = 0; y < BOARD_HEIGHT; y++) {
-            neighbor_list[IX(x, y)].size = 0;
+            Neighbor& cell = neighbor_list[IX(x, y)];
+            cell.size = 0;
             if (x > 0) {
+                cell.neighbors[cell.size++] = IX(x - 1, y);
+            }
+            if (y > 0) {
+                cell.neighbors[cell.size++] = IX(x, y - 1);
+            }
+            if (x < (BOARD_WIDTH - 1)) {
+                cell.neighbors[cell.size++] = IX(x + 1, y);
+            }
+            if (y < (BOARD_HEIGHT - 1)) {
+                cell.neighbors[cell.size++] = IX(x, y + 1);
+            }
+            if (x > 0 && y < (BOARD_HEIGHT - 1)) {
+                cell.neighbors[cell.size++] = IX(x - 1, y + 1);
+            }
+            if (y > 0 && x < (BOARD_WIDTH - 1)) {
+                cell.neighbors[cell.size++] = IX(x + 1, y - 1);
             }
         }
     }
