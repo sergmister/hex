@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <string>
 #include <vector>
+#include <iostream>
 
 extern const uint16_t BOARD_WIDTH;
 extern const uint16_t BOARD_HEIGHT;
@@ -135,7 +136,7 @@ void HexState::print() {
             }
         }
         str += " ";
-        if (row == board.WIDTH - 1) str += "\n";
+        if (row == BOARD_WIDTH - 1) str += "\n";
     } 
     std::cout << str;
 }
