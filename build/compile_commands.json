@@ -1,0 +1,12 @@
+[
+{
+  "directory": "/home/sergii/programming/HIP2021/hex/build",
+  "command": "/usr/bin/c++ -g -std=gnu++11 -o CMakeFiles/hex.dir/src/game.cpp.o -c /home/sergii/programming/HIP2021/hex/src/game.cpp",
+  "file": "/home/sergii/programming/HIP2021/hex/src/game.cpp"
+},
+{
+  "directory": "/home/sergii/programming/HIP2021/hex/build",
+  "command": "/usr/bin/c++ -g -std=gnu++11 -o CMakeFiles/hex.dir/src/play.cpp.o -c /home/sergii/programming/HIP2021/hex/src/play.cpp",
+  "file": "/home/sergii/programming/HIP2021/hex/src/play.cpp"
+}
+]

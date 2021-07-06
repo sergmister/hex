@@ -1,0 +1,5 @@
+# ninja log v5
+0	302	1625589596524615171	CMakeFiles/hex.dir/src/game.cpp.o	91a586a36d06e24a
+0	27	1625517242401702945	CMakeFiles/hex.dir/src/board.cpp.o	ce69aa5c91e2b25b
+0	374	1625589540667893255	CMakeFiles/hex.dir/src/play.cpp.o	c5041bf117966001
+303	440	1625589596657948634	hex	c81ddeeac93e60ab
