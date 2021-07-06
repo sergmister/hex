@@ -141,6 +141,7 @@ void HexState::print() {
         }
         str += " ";
         if (row == BOARD_WIDTH - 1) str += "\n";
+        // hello there
     }
     std::cout << str;
 }
