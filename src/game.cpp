@@ -144,21 +144,24 @@ void HexState::print() {
     for (int i = 0; i < BOARD_SIZE; i++) {
         int row = i / BOARD_WIDTH;
         int col = i % BOARD_WIDTH;
-        str += " ";
-        if (row < col) {
-            str += " ";
-        } else {
-            if (board[i] == CellState::Empty) {
-                str += ".";
-            } else if (board[i] == CellState::White) {
-                str += "o";
-            } else {
-                str += "x";
+        if (col == 0) {
+            for (int j = 0; j < row; j++) {
+                str += " ";
             }
         }
         str += " ";
-        if (row == BOARD_WIDTH - 1) str += "\n";
-        // hello there
+        if (board[i] == CellState::Empty) {
+            str += ".";
+        } else if (board[i] == CellState::White) {
+            str += "o";
+        } else if (board[i] == CellState::Black) {
+            str += "x";
+        } else {
+            str += ".";
+        }
+        if (col == BOARD_WIDTH - 1) {
+            str += "\n";
+        }
     }
     std::cout << str;
 }
