@@ -44,9 +44,20 @@ HexState::HexState(HexState& hexState) : currentPlayer(hexState.currentPlayer) {
     std::copy(std::begin(hexState.board), std::end(hexState.board), std::begin(this->board));
 }
 
+void HexState::reset() {
+    currentPlayer = Player::Black;
+    std::fill_n(board, BOARD_SIZE, CellState::Empty);
+}
+
+void HexState::copy_from(HexState& hexState) {
+    currentPlayer = hexState.currentPlayer;
+    std::copy(std::begin(hexState.board), std::end(hexState.board), std::begin(this->board));
+}
+
 // closures are complicated and sometimes slow
 // passing eq_cell_state and move_cell_state by struct is 20% slower than by argument
 // could this be something with the cache? (cpus are weird)
+
 void HexBoard::dfs(HexState& state, uint16_t pos, CellState eq_cell_state, CellState move_cell_state) {
     Neighbor neighbor_cell = neighbor_list[pos];
     for (uint8_t i = 0; i < neighbor_cell.size; i++) {

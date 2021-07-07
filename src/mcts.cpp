@@ -1,6 +1,7 @@
 // Taken from https://github.com/ryanbhayward/miowy/blob/master/node.cpp
 #include "mcts.hpp"
 #include "game.hpp"
+
 #include "math.h"
 
 void Node::expand(HexState& state) {}
@@ -63,9 +64,9 @@ void Node::record_game(bool win) {
     games++;
 }
 
-float Node::ucb_eval(Node& child) { 
+float Node::ucb_eval(Node& child) {
     if (games == 0) {
-        return 1e10; // "infinity"
+        return 1e10;  // "infinity"
     }
-    return (1.0 - float(child.wins)/child.games) + UCB_EXPLORE*sqrt(sqrt(games)/child.games);
+    return (1.0 - float(child.wins) / child.games) + UCB_EXPLORE * sqrt(sqrt(games) / child.games);
 }

@@ -50,7 +50,7 @@ uint16_t get_move_input(HexState state) {
 }
 
 void bench() {
-    HexBoard b = HexBoard();
+    HexBoard board = HexBoard();
     // uint16_t moves[] = {
     //     695,  294,  92,  641,  436,  403,  186,  10,   680,  198, 413, 967, 748,  501,  34,   952,  516,  443,  922,
     //     878,  568,  384, 248,  589,  997,  399,  174,  445,  782, 669, 196, 744,  194,  131,  241,  26,   957,  400,
@@ -113,9 +113,9 @@ void bench() {
 
     auto t1 = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < 100000; i++) {
-        HexState s = HexState();
+        HexState state = HexState();
         for (auto move : moves) {
-            b.move(s, move);
+            board.move(state, move);
         }
     }
     auto t2 = std::chrono::high_resolution_clock::now();
@@ -129,21 +129,21 @@ void bench() {
 }
 
 int main() {
-    HexBoard b = HexBoard();
-    HexState s = HexState();
+    HexBoard board = HexBoard();
+    HexState state = HexState();
 
-    std::cout << sizeof(s) << std::endl;
+    std::cout << sizeof(state) << std::endl;
 
     HexState s2 = HexState(s);
     while (true) {
-        s.print();
-        uint16_t move = get_move_input(s);
-        if (b.move(s, move)) {
+        state.print();
+        uint16_t move = get_move_input(state);
+        if (board.move(state, move)) {
             break;
         }
     }
-    s.print();
-    std::cout << (s.currentPlayer == Player::Black ? "Black" : "White") << " wins!" << std::endl;
+    state.print();
+    std::cout << (state.currentPlayer == Player::Black ? "Black" : "White") << " wins!" << std::endl;
 
     // bench();
 }
