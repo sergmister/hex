@@ -134,7 +134,6 @@ int main() {
 
     std::cout << sizeof(state) << std::endl;
 
-    HexState s2 = HexState(s);
     while (true) {
         state.print();
         uint16_t move = get_move_input(state);
