@@ -38,31 +38,28 @@ HexBoard::HexBoard() {
     }
 }
 
-HexState::HexState(HexBoard& hexBoard) : hexBoard(hexBoard), currentPlayer(Player::Black) {
-    std::fill_n(board, BOARD_SIZE, CellState::Empty);
-}
+HexState::HexState() : currentPlayer(Player::Black) { std::fill_n(board, BOARD_SIZE, CellState::Empty); }
 
-HexState::HexState(HexState& hexState)
-    : hexBoard(hexState.hexBoard), currentPlayer(hexState.currentPlayer) {
+HexState::HexState(HexState& hexState) : currentPlayer(hexState.currentPlayer) {
     std::copy(std::begin(hexState.board), std::end(hexState.board), std::begin(this->board));
 }
 
 // closures are complicated and sometimes slow
 // passing eq_cell_state and move_cell_state by struct is 20% slower than by argument
 // could this be something with the cache? (cpus are weird)
-void HexState::dfs(uint16_t pos, CellState eq_cell_state, CellState move_cell_state) {
-    Neighbor neighbor_cell = hexBoard.neighbor_list[pos];
+void HexBoard::dfs(HexState& state, uint16_t pos, CellState eq_cell_state, CellState move_cell_state) {
+    Neighbor neighbor_cell = neighbor_list[pos];
     for (uint8_t i = 0; i < neighbor_cell.size; i++) {
-        if (board[neighbor_cell.neighbors[i]] == eq_cell_state) {
-            board[neighbor_cell.neighbors[i]] = move_cell_state;
-            dfs(neighbor_cell.neighbors[i], eq_cell_state, move_cell_state);
+        if (state.board[neighbor_cell.neighbors[i]] == eq_cell_state) {
+            state.board[neighbor_cell.neighbors[i]] = move_cell_state;
+            dfs(state, neighbor_cell.neighbors[i], eq_cell_state, move_cell_state);
         }
     }
 }
 
-bool HexState::move(uint16_t pos) {
+bool HexBoard::move(HexState& state, uint16_t pos) {
     // if (board[pos] != CellState::Empty) return false;
-    switch (currentPlayer) {
+    switch (state.currentPlayer) {
         case Player::Black: {
             bool north_connected = false;
             bool south_connected = false;
@@ -71,25 +68,25 @@ bool HexState::move(uint16_t pos) {
             } else if (pos >= (BOARD_SIZE - BOARD_WIDTH)) {  // Last row
                 south_connected = true;
             }
-            Neighbor neighbor_cell = hexBoard.neighbor_list[pos];
+            Neighbor neighbor_cell = neighbor_list[pos];
             for (uint8_t i = 0; i < neighbor_cell.size; i++) {
-                if (board[neighbor_cell.neighbors[i]] == CellState::BlackNorth) {
+                if (state.board[neighbor_cell.neighbors[i]] == CellState::BlackNorth) {
                     north_connected = true;
-                } else if (board[neighbor_cell.neighbors[i]] == CellState::BlackSouth) {
+                } else if (state.board[neighbor_cell.neighbors[i]] == CellState::BlackSouth) {
                     south_connected = true;
                 }
             }
             if (north_connected && south_connected) {
-                board[pos] = CellState::BlackWin;
+                state.board[pos] = CellState::BlackWin;
                 return true;
             } else if (north_connected) {
-                board[pos] = CellState::BlackNorth;
-                dfs(pos, CellState::Black, CellState::BlackNorth);
+                state.board[pos] = CellState::BlackNorth;
+                dfs(state, pos, CellState::Black, CellState::BlackNorth);
             } else if (south_connected) {
-                board[pos] = CellState::BlackSouth;
-                dfs(pos, CellState::Black, CellState::BlackNorth);
+                state.board[pos] = CellState::BlackSouth;
+                dfs(state, pos, CellState::Black, CellState::BlackNorth);
             } else {
-                board[pos] = CellState::Black;
+                state.board[pos] = CellState::Black;
             }
             break;
         }
@@ -101,31 +98,31 @@ bool HexState::move(uint16_t pos) {
             } else if (pos % BOARD_WIDTH == (BOARD_WIDTH - 1)) {  // Last column
                 east_connected = true;
             }
-            Neighbor neighbor_cell = hexBoard.neighbor_list[pos];
+            Neighbor neighbor_cell = neighbor_list[pos];
             for (uint8_t i = 0; i < neighbor_cell.size; i++) {
-                if (board[neighbor_cell.neighbors[i]] == CellState::WhiteWest) {
+                if (state.board[neighbor_cell.neighbors[i]] == CellState::WhiteWest) {
                     west_connected = true;
-                } else if (board[neighbor_cell.neighbors[i]] == CellState::WhiteEast) {
+                } else if (state.board[neighbor_cell.neighbors[i]] == CellState::WhiteEast) {
                     east_connected = true;
                 }
             }
             if (west_connected && east_connected) {
-                board[pos] = CellState::WhiteWin;
+                state.board[pos] = CellState::WhiteWin;
                 return true;
             } else if (west_connected) {
-                board[pos] = CellState::WhiteWest;
-                dfs(pos, CellState::Black, CellState::BlackNorth);
+                state.board[pos] = CellState::WhiteWest;
+                dfs(state, pos, CellState::Black, CellState::BlackNorth);
             } else if (east_connected) {
-                board[pos] = CellState::WhiteEast;
-                dfs(pos, CellState::Black, CellState::BlackNorth);
+                state.board[pos] = CellState::WhiteEast;
+                dfs(state, pos, CellState::Black, CellState::BlackNorth);
             } else {
-                board[pos] = CellState::White;
+                state.board[pos] = CellState::White;
             }
             break;
         }
     }
 
-    currentPlayer = currentPlayer == Player::Black ? Player::White : Player::Black;
+    state.currentPlayer = state.currentPlayer == Player::Black ? Player::White : Player::Black;
     return false;
 }
 

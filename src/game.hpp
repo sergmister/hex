@@ -7,12 +7,12 @@ const uint16_t BOARD_SIZE = BOARD_WIDTH * BOARD_HEIGHT;
 
 inline uint16_t IX(uint16_t x, uint16_t y) { return y * BOARD_WIDTH + x; }
 
-enum struct Player {
+enum struct Player : int8_t {
     White,
     Black,
 };
 
-enum struct CellState {
+enum struct CellState : int8_t {
     Empty = 0,
     WhiteWest = -3,
     WhiteEast = -2,
@@ -29,28 +29,24 @@ struct Neighbor {
     uint16_t neighbors[6];
 };
 
-struct HexBoard {
-    HexBoard();
-
-    Neighbor neighbor_list[BOARD_SIZE];
-};
-
-// struct Move {};
-
 struct HexState {
-    HexState(HexBoard &hexBoard);
+    HexState();
 
     HexState(HexState &hexState);
-
-    HexBoard hexBoard;
 
     Player currentPlayer;
 
     CellState board[BOARD_SIZE];
 
-    bool move(uint16_t pos);
-
-    void dfs(uint16_t pos, CellState eq_cell_state, CellState move_cell_state);
-
     void print();
+};
+
+struct HexBoard {
+    HexBoard();
+
+    Neighbor neighbor_list[BOARD_SIZE];
+
+    bool move(HexState &state, uint16_t pos);
+
+    void dfs(HexState &state, uint16_t pos, CellState eq_cell_state, CellState move_cell_state);
 };
