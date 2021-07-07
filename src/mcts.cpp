@@ -4,59 +4,47 @@
 #include "game.hpp"
 #include "math.h"
 
-void Node::expand(HexState& state) {}
+Node MCTS::select() {
+    Node best = this;
+    while (!best.isLeaf()) {// todo: add game over condition
+        float best_eval = -1;
+        Node best_child;
+        for (Edge edge : best.edges) {
+            float eval = best.ucb_eval(edge.child);
+            if (eval > best_eval) {
+                best_eval = eval;
+                best_child = edge.child;
+            }
+        }
+        best = best_child
+    }
+    return best;
+}
+void Node::expand(HexState& state) {
+    int empty = 0;
+    for (int i = 0; i < BOARD_SIZE; i++) {
+        if (state.board[i] == CellState::Empty) {
+            Edge edge;
+            Node child;
+            edge.child = child;
+            edge.move = i;
+            edges.push_back(edge);
+            // simulate(edge)
+        }
+    }
+    
+}
 
-Player Node::randomPlayout(HexBoard& board, HexState state) {
+Player MCTS::randomPlayout() {
     while (true) {
         int move = rand() % BOARD_SIZE;
-        if (board.move(state, move)) {
+        if (board.move(rootState, move)) {
             break;
         }
     }
-    return state.currentPlayer;
+    return rootState.currentPlayer;
 }
 
-// int Node::bestMove(HexState& state, int plays) { // random moves until someone wins
-//     for (int i = 0; i < BOARD_SIZE; i++) {
-//         if (state.board[i] != CellState::Empty) {
-//             Edge child = Edge();
-//             child.move = i;
-//             edges.push_back(child);
-//         }
-//     }
-//     int best_move, most_wins = -1;
-//     for (int i = 0; i < plays; i++) {
-//         for (int j = 0; j < children.size(); j++) {
-//             HexState new_state = HexState(state);
-//             new_state.move(children[j].lcn);
-//             children[j].record_game(state.currentPlayer == randomPlayout(new_state));
-//         }
-//     }
-//     for (int i = 0; i < children.size(); i++) {
-//         if (children[i].wins > most_wins) {
-//             most_wins = children[i].wins;
-//             best_move = children[i].lcn;
-//         }
-//     }
-//     return best_move;
-// }
-
-// int Node::uct_playout(HexState& state, int player, bool useMiai) {  // does the monte carlo tree search
-//     if (isLeaf()) {
-//         if (games >= EXPAND_THRESHOLD) {
-//             expand(state);
-//         }
-//     }
-//     int winner;
-//     if (isLeaf()) {
-//         // PLAY GAME TO FIND WINNER
-//     } else {
-//         Node& c = children[bestChildIndex()];
-//         // todo
-//     }
-//     record_game(winner == player);
-//     return winner;
-// }
 
 void Node::record_game(bool win) {
     wins += win;

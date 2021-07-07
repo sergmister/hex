@@ -35,6 +35,7 @@ struct Node {
     }
     float ucb_eval(Node& child);  // "upper confidence bound" (used to determine which node to explore next)
     int uct_playout(HexState& board, int player, bool useMiai);  // uct is just a name
+    void record_game(bool win);  // update number of wins and games
 };
 
 struct Edge {
@@ -46,10 +47,10 @@ struct MCTS {
     HexState rootState;
 
     Node rootNode;
+    HexBoard board;
 
-    void record_game(bool win);  // update number of wins and games
 
-    Node move_to_leaf();  // selection
+    Node select();  // selection
 
     void expand_and_evaluate(HexState& board);
 
@@ -57,7 +58,7 @@ struct MCTS {
 
     // int bestMove(HexState& board, int plays);
 
-    Player randomPlayout(HexState state);  // find winner of random game
+    Player randomPlayout();  // find winner of random game
 
     float ucb_eval(Node& child);  // "upper confidence bound" (used to determine which node to explore next)
 
