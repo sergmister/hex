@@ -141,18 +141,19 @@ void bench() {
 }
 
 int main() {
-    // HexBoard b = HexBoard();
-    // HexState s = HexState(b);
+    HexBoard b = HexBoard();
+    HexState s = HexState(b);
 
-    // while (true) {
-    //     s.print();
-    //     uint16_t move = get_move_input(s);
-    //     if (s.move(move)) {
-    //         break;
-    //     }
-    // }
-    // s.print();
-    // std::cout << (s.currentPlayer == Player::Black ? "Black" : "White") << " wins!" << std::endl;
+    while (true) {
+        s.print();
+        uint16_t move = get_move_input(s);
+        if (s.move(move)) {
+            break;
+        }
+    }
+    HexState s2 = HexState(s);
+    s.print();
+    std::cout << (s.currentPlayer == Player::Black ? "Black" : "White") << " wins!" << std::endl;
 
     bench();
 }

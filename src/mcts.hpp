@@ -1,5 +1,6 @@
 // Taken from https://github.com/ryanbhayward/miowy/blob/master/node.h
 #include "game.hpp"
+#include <vector>
 static const int UNKNOWN = 2;
 static const int PROVEN_WIN = 1;
 static const int PROVEN_LOSS = 0;
@@ -12,21 +13,18 @@ struct Node {
     int games;
     int proofStatus;  // Whether it is unkown, proven win, or proven loss
     int lcn;
-    Node* children;
-    int numChildren;
+    std::vector<Node> children;
     Node() {
         proofStatus = UNKNOWN;
-        numChildren = 0;
         wins = 0;
         games = 0;
     }
-    ~Node();
 
     void expand(HexState& board);
     int bestMove();
     int bestChildIndex();
     bool isLeaf() {
-        return !children;  // If no children, then it is a leaf
+        return !children.size();  // If no children, then it is a leaf
     }
     float ucb_eval(
         Node& child);  // "upper confidence bound" (used to determine which node to explore next)

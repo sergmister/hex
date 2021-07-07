@@ -1,4 +1,6 @@
+// Taken from https://github.com/ryanbhayward/miowy/blob/master/node.cpp
 #include "mcts.hpp"
+#include "math.h"
 
 void Node::expand(HexState& board) {}
 
@@ -22,4 +24,11 @@ int Node::uct_playout(HexState& board, int player, bool useMiai) {
         wins++;
     }
     return winner;
+}
+
+float Node::ucb_eval(Node& child) { 
+    if (games == 0) {
+        return 1e10; // "infinity"
+    }
+    return (1.0 - float(child.wins)/child.games) + UCB_EXPLORE*sqrt(sqrt(games)/child.games);
 }
