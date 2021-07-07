@@ -1,11 +1,16 @@
 #pragma once
 #include <cstdint>
 
-const uint16_t BOARD_WIDTH = 6;
-const uint16_t BOARD_HEIGHT = 6;
+const uint16_t BOARD_WIDTH = 8;
+const uint16_t BOARD_HEIGHT = 8;
 const uint16_t BOARD_SIZE = BOARD_WIDTH * BOARD_HEIGHT;
 
 inline uint16_t IX(uint16_t x, uint16_t y) { return y * BOARD_WIDTH + x; }
+
+enum struct Player {
+    White,
+    Black,
+};
 
 enum struct CellState {
     Empty = 0,
@@ -37,13 +42,13 @@ struct HexState {
 
     HexBoard hexBoard;
 
-    CellState currentPlayer;
+    Player currentPlayer;
 
     CellState board[BOARD_SIZE];
 
     bool move(uint16_t pos);
 
-    void bfs(uint16_t pos, CellState move_cell_state);
+    void dfs(uint16_t pos, CellState eq_cell_state, CellState move_cell_state);
 
     void print();
 };

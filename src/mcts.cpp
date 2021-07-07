@@ -1,5 +1,9 @@
 #include "mcts.hpp"
 
+void Node::expand(HexState& board) {}
+
+int Node::bestChildIndex() { return 0; }
+
 int Node::uct_playout(HexState& board, int player, bool useMiai) {
     if (isLeaf()) {
         if (games >= EXPAND_THRESHOLD) {
