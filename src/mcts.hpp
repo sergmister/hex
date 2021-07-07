@@ -19,9 +19,10 @@ struct Node {
         wins = 0;
         games = 0;
     }
-
+    void record_game(bool win); // update number of wins and games
     void expand(HexState& board);
-    int bestMove();
+    int bestMove(HexState& board, int plays);
+    Player randomPlayout(HexState state); // find winner of random game
     int bestChildIndex();
     bool isLeaf() {
         return !children.size();  // If no children, then it is a leaf

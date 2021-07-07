@@ -144,6 +144,7 @@ int main() {
     HexBoard b = HexBoard();
     HexState s = HexState(b);
 
+    HexState s2 = HexState(s);
     while (true) {
         s.print();
         uint16_t move = get_move_input(s);
@@ -151,7 +152,6 @@ int main() {
             break;
         }
     }
-    HexState s2 = HexState(s);
     s.print();
     std::cout << (s.currentPlayer == Player::Black ? "Black" : "White") << " wins!" << std::endl;
 
