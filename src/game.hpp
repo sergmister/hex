@@ -40,6 +40,8 @@ struct HexBoard {
 struct HexState {
     HexState(HexBoard &hexBoard);
 
+    HexState(HexState &hexState);
+
     HexBoard hexBoard;
 
     Player currentPlayer;
