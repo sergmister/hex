@@ -38,6 +38,10 @@ struct HexState {
 
     CellState board[BOARD_SIZE];
 
+    void reset();
+
+    void copy_from(HexState &hexState);
+
     void print();
 };
 
