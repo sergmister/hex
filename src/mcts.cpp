@@ -8,10 +8,10 @@ void Node::expand(HexState& state) {}
 
 int Node::bestChildIndex() { return 0; }
 
-Player Node::randomPlayout(HexState state) {
+Player Node::randomPlayout(HexBoard& board, HexState state) {
    while(true) {
        int move = rand() % BOARD_SIZE;
-       if (state.move(move)) {
+       if (board.move(state, move)) {
            break;
        }
    } 
@@ -21,9 +21,9 @@ Player Node::randomPlayout(HexState state) {
 int Node::bestMove(HexState& state, int plays) { // random moves until someone wins
     for (int i = 0; i < BOARD_SIZE; i++) {
         if (state.board[i] != CellState::Empty) {
-            Node child = Node();
-            child.lcn = i;
-            children.push_back(child);
+            Edge child = Edge();
+            child.move = i;
+            edges.push_back(child);
         }
     }
     int best_move, most_wins = -1;
