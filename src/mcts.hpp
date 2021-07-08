@@ -19,15 +19,21 @@ struct Node {
     Node* parent;
     std::vector<Edge> edges;
 
-    Node() {
+    Node();
+    Node(HexState state) {
         proofStatus = UNKNOWN;
         wins = 0;
         games = 0;
+        this->state = state;
     }
-
+    HexState state;
     void record_game(bool win);  // update number of wins and games
-    void expand(HexState& board);
-    int bestMove(HexState& board, int plays);
+
+    void backpropagate(Player winner);
+    Node select();  // selection
+    void expand(HexBoard& board);
+    Player randomPlayout(HexBoard& board);  // find winner of random game (simulate)
+
     Player randomPlayout(HexState state);  // find winner of random game
     int bestChildIndex();
     bool isLeaf() {
@@ -35,12 +41,14 @@ struct Node {
     }
     float ucb_eval(Node& child);  // "upper confidence bound" (used to determine which node to explore next)
     int uct_playout(HexState& board, int player, bool useMiai);  // uct is just a name
-    void record_game(bool win);  // update number of wins and games
 };
 
 struct Edge {
     uint16_t move;
     Node child;
+    Edge(Node child) {
+        this->child = child;
+    }
 };
 
 struct MCTS {
@@ -49,18 +57,8 @@ struct MCTS {
     Node rootNode;
     HexBoard board;
 
-
-    Node select();  // selection
-
-    void expand_and_evaluate(HexState& board);
-
-    void backpropagate();
-
-    // int bestMove(HexState& board, int plays);
-
-    Player randomPlayout();  // find winner of random game
-
+    void best_move(HexState& state);
     float ucb_eval(Node& child);  // "upper confidence bound" (used to determine which node to explore next)
 
     // int uct_playout(HexState& board, int player, bool useMiai);  // uct is just a name
-}
+};

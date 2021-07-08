@@ -30,6 +30,7 @@ struct Neighbor {
 };
 
 struct HexState {
+    bool gameOver = false;
     HexState();
 
     HexState(HexState &hexState);

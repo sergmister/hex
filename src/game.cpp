@@ -89,6 +89,7 @@ bool HexBoard::move(HexState& state, uint16_t pos) {
             }
             if (north_connected && south_connected) {
                 state.board[pos] = CellState::BlackWin;
+                state.gameOver = true;
                 return true;
             } else if (north_connected) {
                 state.board[pos] = CellState::BlackNorth;
@@ -119,6 +120,7 @@ bool HexBoard::move(HexState& state, uint16_t pos) {
             }
             if (west_connected && east_connected) {
                 state.board[pos] = CellState::WhiteWin;
+                state.gameOver = true;
                 return true;
             } else if (west_connected) {
                 state.board[pos] = CellState::WhiteWest;
