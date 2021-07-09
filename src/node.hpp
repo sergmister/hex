@@ -28,11 +28,9 @@ struct Node {
     void expand(HexBoard& board);
     Player randomPlayout(HexBoard& board);  // find winner of random game (simulate)
 
-    Player randomPlayout(HexState state);  // find winner of random game
     int bestChildIndex();
     bool isLeaf() {
         return children.empty();  // If no children, then it is a leaf
     }
     float ucb_eval(Node& child);  // "upper confidence bound" (used to determine which node to explore next)
-    int uct_playout(HexState& board, int player, bool useMiai);  // uct is just a name
 };
