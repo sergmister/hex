@@ -7,6 +7,12 @@
 
 Node::Node() {}
 
+Node::Node(const Node& node) {
+    wins = node.games;
+    games = node.games;
+    parent = node.parent;
+}
+
 Node::Node(HexState state) {
     proofStatus = UNKNOWN;
     wins = 0;
@@ -37,6 +43,7 @@ void Node::expand(HexBoard& board) {
             HexState child_state = HexState(state);
             board.move(child_state, i);
             Node child(child_state);
+            child.move_number = i;
             child.parent = this;
             children.push_back(child);
             // simulate(edge)

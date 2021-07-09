@@ -13,12 +13,14 @@ static const int EXPAND_THRESHOLD = 2;
 struct Node {
     int wins;
     int games;
+    int move_number;
     int proofStatus;  // Whether it is unkown, proven win, or proven loss
 
     Node* parent;
     std::vector<Node> children;
 
     Node();
+    Node(const Node& node);
     Node(HexState state);
     HexState state;
     void record_game(bool win);  // update number of wins and games

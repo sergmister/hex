@@ -2,7 +2,7 @@
 
 #include "node.hpp"
 
-void MCTS::best_move(HexState& state) {
+int MCTS::best_move(HexState& state) {
     int simulations = 1000;
     rootNode = Node(state);
     for (int i = 0; i < simulations; i++) {
@@ -12,4 +12,13 @@ void MCTS::best_move(HexState& state) {
             child.backpropagate(child.randomPlayout(board));
         }
     }
+    int most_trials = -1;
+    Node best_child;
+    for (Node child : rootNode.children) {
+        if (child.games > most_trials) {
+            most_trials = child.games;
+            best_child = child;
+        }
+    }
+    return best_child.move_number;
 }
