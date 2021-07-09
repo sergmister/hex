@@ -4,6 +4,7 @@
 #include <string>
 
 #include "game.hpp"
+#include "mcts.hpp"
 
 extern const uint16_t BOARD_WIDTH;
 extern const uint16_t BOARD_HEIGHT;
@@ -131,11 +132,14 @@ void bench() {
 int main() {
     HexBoard board = HexBoard();
     HexState state = HexState();
+    MCTS m;
 
     std::cout << sizeof(state) << std::endl;
 
     while (true) {
         state.print();
+        int best = m.best_move(state);
+        std::cout << (char)(best % BOARD_WIDTH + 'a') << 1 + (best / BOARD_WIDTH) << '\n';
         uint16_t move = get_move_input(state);
         if (board.move(state, move)) {
             break;

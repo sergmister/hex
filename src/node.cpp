@@ -11,18 +11,14 @@ Node::Node(const Node& node) {
     wins = node.games;
     games = node.games;
     parent = node.parent;
+    move_number = node.move_number;
 }
 
-Node::Node(HexState state) {
-    proofStatus = UNKNOWN;
-    wins = 0;
-    games = 0;
-    this->state = state;
-}
+Node::Node(HexState* state) { this->state = state; }
 
-Node Node::select() {
-    Node best = *this;
-    while (!best.isLeaf() && !best.state.gameOver) {
+Node& Node::select() {
+    Node& best = *this;
+    while (!best.isLeaf() && !best.state->gameOver) {
         float best_eval = -1;
         Node best_child;
         for (Node child : best.children) {
@@ -39,10 +35,10 @@ Node Node::select() {
 void Node::expand(HexBoard& board) {
     int empty = 0;
     for (int i = 0; i < BOARD_SIZE; i++) {
-        if (state.board[i] == CellState::Empty) {
-            HexState child_state = HexState(state);
+        if (state->board[i] == CellState::Empty) {
+            HexState child_state = HexState(*state);
             board.move(child_state, i);
-            Node child(child_state);
+            Node child(&child_state);
             child.move_number = i;
             child.parent = this;
             children.push_back(child);
@@ -52,8 +48,8 @@ void Node::expand(HexBoard& board) {
 }
 
 void Node::backpropagate(Player winner) {
-    record_game(winner == state.currentPlayer);
-    if (parent) {
+    record_game(winner == state->currentPlayer);
+    if (parent != NULL) {
         parent->backpropagate(winner);
     }
 }
@@ -61,11 +57,11 @@ void Node::backpropagate(Player winner) {
 Player Node::randomPlayout(HexBoard& board) {
     while (true) {
         int move = rand() % BOARD_SIZE;
-        if (board.move(state, move)) {
+        if (board.move(*state, move)) {
             break;
         }
     }
-    return state.currentPlayer;
+    return state->currentPlayer;
 }
 
 void Node::record_game(bool win) {
