@@ -100,7 +100,7 @@ bool HexBoard::move(HexState& state, uint16_t pos) {
                 dfs(state, pos, CellState::Black, CellState::BlackNorth);
             } else if (south_connected) {
                 state.board[pos] = CellState::BlackSouth;
-                dfs(state, pos, CellState::Black, CellState::BlackNorth);
+                dfs(state, pos, CellState::Black, CellState::BlackSouth);
             } else {
                 state.board[pos] = CellState::Black;
             }
@@ -128,10 +128,10 @@ bool HexBoard::move(HexState& state, uint16_t pos) {
                 return true;
             } else if (west_connected) {
                 state.board[pos] = CellState::WhiteWest;
-                dfs(state, pos, CellState::Black, CellState::BlackNorth);
+                dfs(state, pos, CellState::White, CellState::WhiteWest);
             } else if (east_connected) {
                 state.board[pos] = CellState::WhiteEast;
-                dfs(state, pos, CellState::Black, CellState::BlackNorth);
+                dfs(state, pos, CellState::White, CellState::WhiteEast);
             } else {
                 state.board[pos] = CellState::White;
             }

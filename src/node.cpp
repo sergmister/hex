@@ -63,13 +63,17 @@ void Node::backpropagate(Player winner) {
 }
 
 Player Node::randomPlayout(HexBoard& board) {
+    HexState* copyState = new HexState();
+    copyState->copy_from(*state);
     while (true) {
         int move = rand() % BOARD_SIZE;
-        if (board.move(*state, move)) {
+        if (board.move(*copyState, move)) {
             break;
         }
     }
-    return state->currentPlayer;
+    Player winner = state->currentPlayer;
+    delete copyState;
+    return winner;
 }
 
 void Node::record_game(bool win) {

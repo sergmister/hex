@@ -8,6 +8,10 @@ int MCTS::best_move(HexState& state) {
     for (int i = 0; i < simulations; i++) {
         Node* node = rootNode.select();
         node->expand(board);
+        if (node->isLeaf()) {
+            Player winner = node->randomPlayout(board);
+            node->backpropagate(winner);
+        }
         for (Node* child : node->children) {
             Player winner = child->randomPlayout(board);
             child->backpropagate(winner);

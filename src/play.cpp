@@ -139,8 +139,13 @@ int main() {
     while (true) {
         state.print();
         int best = m.best_move(state);
-        std::cout << (char)(best % BOARD_WIDTH + 'a') << 1 + (best / BOARD_WIDTH) << '\n';
-        uint16_t move = get_move_input(state);
+        // std::cout << (char)(best % BOARD_WIDTH + 'a') << 1 + (best / BOARD_WIDTH) << '\n';
+        uint16_t move;
+        if (state.currentPlayer == Player::Black) {
+            move = best;
+        } else {
+            move = get_move_input(state);
+        }
         if (board.move(state, move)) {
             break;
         }
