@@ -51,7 +51,11 @@ void HexState::reset() {
 
 void HexState::copy_from(HexState& hexState) {
     currentPlayer = hexState.currentPlayer;
-    std::copy(std::begin(hexState.board), std::end(hexState.board), std::begin(this->board));
+    gameOver = hexState.gameOver;
+    for (int i = 0; i < BOARD_SIZE; i++) {
+        board[i] = hexState.board[i];
+    }
+    // std::copy(std::begin(hexState.board), std::end(hexState.board), std::begin(this->board));
 }
 
 // closures are complicated and sometimes slow

@@ -17,16 +17,17 @@ struct Node {
     int proofStatus;  // Whether it is unkown, proven win, or proven loss
 
     Node* parent = NULL;
-    std::vector<Node> children;
+    std::vector<Node*> children;
 
     Node();
-    Node(const Node& node);
+    ~Node();
+    // Node(const Node& node);
     Node(HexState* state);
     HexState* state;
     void record_game(bool win);  // update number of wins and games
 
     void backpropagate(Player winner);
-    Node& select();  // selection
+    Node* select();  // selection
     void expand(HexBoard& board);
     Player randomPlayout(HexBoard& board);  // find winner of random game (simulate)
 

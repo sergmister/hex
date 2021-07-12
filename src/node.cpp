@@ -6,23 +6,29 @@
 #include "mcts.hpp"
 
 Node::Node() {}
-
-Node::Node(const Node& node) {
-    wins = node.games;
-    games = node.games;
-    parent = node.parent;
-    move_number = node.move_number;
+Node::~Node() {
+    for (int i = 0; i < children.size(); i++) {
+        delete children[i]->state;
+        delete children[i];
+    }
 }
+
+// Node::Node(const Node& node) {
+//     wins = node.games;
+//     games = node.games;
+//     parent = node.parent;
+//     move_number = node.move_number;
+// }
 
 Node::Node(HexState* state) { this->state = state; }
 
-Node& Node::select() {
-    Node& best = *this;
-    while (!best.isLeaf() && !best.state->gameOver) {
+Node* Node::select() {
+    Node* best = this;
+    while (!best->isLeaf() && !best->state->gameOver) {
         float best_eval = -1;
-        Node best_child;
-        for (Node child : best.children) {
-            float eval = best.ucb_eval(child);
+        Node* best_child;
+        for (Node* child : best->children) {
+            float eval = best->ucb_eval(*child);
             if (eval > best_eval) {
                 best_eval = eval;
                 best_child = child;
@@ -36,11 +42,13 @@ void Node::expand(HexBoard& board) {
     int empty = 0;
     for (int i = 0; i < BOARD_SIZE; i++) {
         if (state->board[i] == CellState::Empty) {
-            HexState child_state = HexState(*state);
-            board.move(child_state, i);
-            Node child(&child_state);
-            child.move_number = i;
-            child.parent = this;
+            HexState* child_state = new HexState();
+            child_state->copy_from(*state);
+            board.move(*child_state, i);
+
+            Node* child = new Node(child_state);
+            child->move_number = i;
+            child->parent = this;
             children.push_back(child);
             // simulate(edge)
         }
