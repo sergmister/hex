@@ -146,6 +146,13 @@ int main() {
         } else {
             move = get_move_input(state);
         }
+        // int move = get_move_input(state);
+        // int wins = 0;
+        // int sims = 5;
+        // for (int i = 0; i < sims; i++) {
+        // wins += m.rootNode.randomPlayout(m.board) == state.currentPlayer;
+        // }
+        // std::cout << "wins: " << wins << "/" << sims << ".\n";
         if (board.move(state, move)) {
             break;
         }

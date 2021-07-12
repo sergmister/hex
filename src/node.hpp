@@ -14,7 +14,6 @@ struct Node {
     int wins = 0;
     int games = 0;
     int move_number = 0;
-    int proofStatus;  // Whether it is unkown, proven win, or proven loss
 
     Node* parent = NULL;
     std::vector<Node*> children;
@@ -24,7 +23,6 @@ struct Node {
     // Node(const Node& node);
     Node(HexState* state);
     HexState* state;
-    void record_game(bool win);  // update number of wins and games
 
     void backpropagate(Player winner);
     Node* select();  // selection

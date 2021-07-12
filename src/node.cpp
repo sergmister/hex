@@ -1,6 +1,11 @@
 // Taken from https://github.com/ryanbhayward/miowy/blob/master/node.cpp
 #include "node.hpp"
 
+#include <algorithm>
+#include <cassert>
+#include <iostream>
+#include <random>
+
 #include "game.hpp"
 #include "math.h"
 #include "mcts.hpp"
@@ -39,6 +44,9 @@ Node* Node::select() {
     return best;
 }
 void Node::expand(HexBoard& board) {
+    if (!isLeaf() || state->gameOver) {
+        return;
+    }
     int empty = 0;
     for (int i = 0; i < BOARD_SIZE; i++) {
         if (state->board[i] == CellState::Empty) {
@@ -50,13 +58,15 @@ void Node::expand(HexBoard& board) {
             child->move_number = i;
             child->parent = this;
             children.push_back(child);
-            // simulate(edge)
         }
     }
 }
 
 void Node::backpropagate(Player winner) {
-    record_game(winner == state->currentPlayer);
+    games++;
+    if (winner == state->currentPlayer) {
+        wins++;
+    }
     if (parent != NULL) {
         parent->backpropagate(winner);
     }
@@ -65,25 +75,29 @@ void Node::backpropagate(Player winner) {
 Player Node::randomPlayout(HexBoard& board) {
     HexState* copyState = new HexState();
     copyState->copy_from(*state);
-    while (true) {
-        int move = rand() % BOARD_SIZE;
-        if (board.move(*copyState, move)) {
+
+    std::vector<int> moves;
+    for (int i = 0; i < BOARD_SIZE; i++) {
+        if (copyState->board[i] == CellState::Empty) {
+            moves.push_back(i);
+        }
+    }
+    auto rng = std::default_random_engine{};
+    std::shuffle(std::begin(moves), std::end(moves), rng);
+
+    for (int i = 0; i < moves.size(); i++) {
+        if (board.move(*copyState, moves[i])) {
             break;
         }
     }
-    Player winner = state->currentPlayer;
+    Player winner = copyState->currentPlayer;
     delete copyState;
     return winner;
-}
-
-void Node::record_game(bool win) {
-    wins += win;
-    games++;
 }
 
 float Node::ucb_eval(Node& child) {
     if (games == 0) {
         return 1e10;  // "infinity"
     }
-    return (1.0 - float(child.wins) / child.games) + UCB_EXPLORE * sqrt(sqrt(games) / child.games);
+    return (1 - (float(child.wins) / child.games)) + UCB_EXPLORE * sqrt(sqrt(games) / child.games);
 }
