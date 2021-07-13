@@ -64,15 +64,18 @@ void Node::expand(HexBoard& board) {
 
 void Node::backpropagate(Player winner) {
     games++;
-    if (winner == state->currentPlayer) {
-        wins++;
-    }
-    if (parent != NULL) {
+    if (parent) {
+        if (winner == parent->state->currentPlayer) {
+            wins++;
+        }
         parent->backpropagate(winner);
     }
 }
 
 Player Node::randomPlayout(HexBoard& board) {
+    if (state->gameOver) {
+        return state->currentPlayer;
+    }
     HexState* copyState = new HexState();
     copyState->copy_from(*state);
 
@@ -99,5 +102,5 @@ float Node::ucb_eval(Node& child) {
     if (games == 0) {
         return 1e10;  // "infinity"
     }
-    return (1 - (float(child.wins) / child.games)) + UCB_EXPLORE * sqrt(sqrt(games) / child.games);
+    return ((float(child.wins) / child.games)) + UCB_EXPLORE * sqrt(sqrt(games) / child.games);
 }
