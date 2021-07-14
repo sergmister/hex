@@ -3,7 +3,7 @@
 #include "node.hpp"
 
 int MCTS::best_move(HexState& state) {
-    int simulations = 10000;
+    int simulations = 1000;
     Node rootNode(&state);
     for (int i = 0; i < simulations; i++) {
         Node* node = rootNode.select();

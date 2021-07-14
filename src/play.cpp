@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 
+#include "arena.hpp"
 #include "game.hpp"
 #include "mcts.hpp"
 
@@ -130,6 +131,9 @@ void bench() {
 }
 
 int main() {
+    Arena arena;
+    arena.play_games(1000);
+    return 0;
     HexBoard board = HexBoard();
     HexState state = HexState();
     MCTS m;
