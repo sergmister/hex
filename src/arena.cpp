@@ -16,20 +16,21 @@ void Arena::play_games(int amount) {
 void Arena::play_game(bool playBlack) {
     HexBoard board = HexBoard();
     HexState state = HexState();
-    MCTS mcts;
+    MCTS mcts(&state);
     int move;
     while (true) {
         if ((state.currentPlayer == Player::Black) == playBlack) {
-            move = mcts.best_move(state);
+            move = mcts.best_move(state, 1);
         } else {
-            std::vector<int> moves;
-            for (int i = 0; i < BOARD_SIZE; i++) {
-                if (state.board[i] == CellState::Empty) {
-                    moves.push_back(i);
-                }
-            }
-            srand(time(NULL));
-            move = moves[rand() % moves.size()];
+            move = mcts.best_move(state, 50);
+            //     std::vector<int> moves;
+            //     for (int i = 0; i < BOARD_SIZE; i++) {
+            //         if (state.board[i] == CellState::Empty) {
+            //             moves.push_back(i);
+            //         }
+            //     }
+            //     srand(time(NULL));
+            //     move = moves[rand() % moves.size()];
         }
         if (board.move(state, move)) {
             break;

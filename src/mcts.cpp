@@ -2,11 +2,19 @@
 
 #include "node.hpp"
 
-int MCTS::best_move(HexState& state) {
-    int simulations = 1000;
-    Node rootNode(&state);
+MCTS::MCTS(HexState* state) { rootState = state; }
+void MCTS::move(int i) {
+    for (Node* child : rootNode->children) {
+        if (child->move_number == i) {
+            rootNode = child;
+            return;
+        }
+    }
+}
+int MCTS::best_move(HexState& state) { return best_move(state, 100); }
+int MCTS::best_move(HexState& state, int simulations) {
     for (int i = 0; i < simulations; i++) {
-        Node* node = rootNode.select();
+        Node* node = rootNode->select();
         node->expand(board);
         if (node->isLeaf()) {
             Player winner = node->randomPlayout(board);
@@ -19,7 +27,7 @@ int MCTS::best_move(HexState& state) {
     }
     int most_trials = -1;
     Node* best_child;
-    for (Node* child : rootNode.children) {
+    for (Node* child : rootNode->children) {
         if (child->games > most_trials) {
             most_trials = child->games;
             best_child = child;
