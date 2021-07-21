@@ -20,9 +20,9 @@ void Arena::play_game(bool playBlack) {
     int move;
     while (true) {
         if ((state.currentPlayer == Player::Black) == playBlack) {
-            move = mcts.best_move(state, 1);
+            move = mcts.best_move(1);
         } else {
-            move = mcts.best_move(state, 50);
+            move = mcts.best_move(50);
             //     std::vector<int> moves;
             //     for (int i = 0; i < BOARD_SIZE; i++) {
             //         if (state.board[i] == CellState::Empty) {
@@ -32,6 +32,7 @@ void Arena::play_game(bool playBlack) {
             //     srand(time(NULL));
             //     move = moves[rand() % moves.size()];
         }
+        mcts.move(move);
         if (board.move(state, move)) {
             break;
         }

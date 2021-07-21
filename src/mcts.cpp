@@ -2,7 +2,11 @@
 
 #include "node.hpp"
 
-MCTS::MCTS(HexState* state) { rootState = state; }
+MCTS::MCTS(HexState* state) {
+    rootState = state;
+    rootNode = new Node(state);
+}
+MCTS::~MCTS() { delete rootNode; }
 void MCTS::move(int i) {
     for (Node* child : rootNode->children) {
         if (child->move_number == i) {
@@ -11,8 +15,8 @@ void MCTS::move(int i) {
         }
     }
 }
-int MCTS::best_move(HexState& state) { return best_move(state, 100); }
-int MCTS::best_move(HexState& state, int simulations) {
+int MCTS::best_move() { return best_move(100); }
+int MCTS::best_move(int simulations) {
     for (int i = 0; i < simulations; i++) {
         Node* node = rootNode->select();
         node->expand(board);

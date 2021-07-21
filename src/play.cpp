@@ -52,9 +52,6 @@ uint16_t get_move_input(HexState state) {
 }
 
 int main() {
-    Arena arena;
-    arena.play_games(100);
-    return 0;
     HexBoard board = HexBoard();
     HexState state = HexState();
     MCTS m(&state);
@@ -65,10 +62,11 @@ int main() {
         state.print();
         uint16_t move;
         if (state.currentPlayer == Player::Black) {
-            move = m.best_move(state);
+            move = m.best_move();
         } else {
             move = get_move_input(state);
         }
+        m.move(move);
         if (board.move(state, move)) {
             break;
         }
