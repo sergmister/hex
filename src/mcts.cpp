@@ -15,7 +15,7 @@ void MCTS::move(int i) {
         }
     }
 }
-int MCTS::best_move() { return best_move(100); }
+int MCTS::best_move() { return best_move(1000); }
 int MCTS::best_move(int simulations) {
     for (int i = 0; i < simulations; i++) {
         Node* node = rootNode->select();

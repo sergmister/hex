@@ -56,7 +56,7 @@ int main() {
     HexState state = HexState();
     MCTS m(&state);
 
-    std::cout << sizeof(state) << std::endl;
+    std::cout << "Black (x): top-bottom\n White (o): left-right\n" << std::endl;
 
     while (true) {
         state.print();

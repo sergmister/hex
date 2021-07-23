@@ -14,16 +14,18 @@ struct Node {
     int wins = 0;
     int games = 0;
     int move_number = 0;
+    int bridge[BOARD_SIZE];
 
     Node* parent = NULL;
     std::vector<Node*> children;
+    std::vector<int> child_moves;
 
     Node();
     ~Node();
     // Node(const Node& node);
     Node(HexState* state);
     HexState* state;
-
+    void update_bridges(int move);
     void backpropagate(Player winner);
     Node* select();  // selection
     void expand(HexBoard& board);
