@@ -12,7 +12,8 @@
 
 Node::Node() {
     for (int i = 0; i < BOARD_SIZE; i++) {
-        bridge[i] = -1;
+        bridge_white[i] = -1;
+        bridge_black[i] = -1;
     }
 }
 Node::~Node() {
@@ -54,18 +55,23 @@ inline int to_index(int r, int c) { return r * BOARD_WIDTH + c; }
 inline int to_index(std::pair<int, int> p) { return to_index(p.first, p.second); }
 inline bool in_bound(int r, int c) { return r >= 0 && r < BOARD_HEIGHT && c >= 0 && c < BOARD_WIDTH; }
 inline bool in_bound(std::pair<int, int> p) { return in_bound(p.first, p.second); }
+CellState Node::get_cell(std::pair<int, int> p) {
+    CellState cellState;
+    if (p.first < 0 || p.first >= BOARD_HEIGHT) {
+        cellState = CellState::Black;
+    } else if (p.second < 0 || p.second >= BOARD_WIDTH) {
+        cellState = CellState::White;
+    } else {
+        cellState = state->board[to_index(p)];
+    }
+    return cellState;
+}
 
 void Node::update_bridges(int move) {
     int r = move / BOARD_WIDTH;
     int c = move % BOARD_WIDTH;
     std::vector<std::pair<int, int>> neighbors = {{r + 1, c}, {r + 1, c - 1}, {r, c - 1},
                                                   {r - 1, c}, {r - 1, c + 1}, {r, c + 1}};
-    for (int i = 0; i < neighbors.size(); i++) {
-        if (!in_bound(neighbors[i])) {
-            neighbors.erase(neighbors.begin() + i);
-            i--;
-        }
-    }
     // store pairs of adjecent cells
     std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> pairs = {};
     for (int i = 0; i < neighbors.size(); i++) {
@@ -77,6 +83,37 @@ void Node::update_bridges(int move) {
 
     for (int i = 0; i < neighbors.size(); i++) {
         std::pair<int, int> cell1 = pairs[i].first, cell2 = pairs[i].second;
+        if (!in_bound(cell1) || !in_bound(cell2)) continue;
+        if (state->board[to_index(cell1)] != CellState::Empty || state->board[to_index(cell2)] != CellState::Empty) {
+            continue;
+        }
+        std::pair<int, int> bridge1, bridge2;
+        // find the two cells where the bridge connects to
+        if (cell1.first == cell2.first) {
+            bridge1 = {cell1.first - 1, std::max(cell1.second, cell2.second)};
+            bridge2 = {cell1.first + 1, std::min(cell1.second, cell2.second)};
+        } else if (cell1.second == cell2.second) {
+            bridge1 = {std::max(cell1.first, cell2.first), cell1.second - 1};
+            bridge2 = {std::min(cell1.first, cell2.first), cell1.second + 1};
+        } else {
+            bridge1 = {std::max(cell1.first, cell2.first), std::max(cell1.second, cell2.second)};
+            bridge2 = {std::min(cell1.first, cell2.first), std::min(cell1.second, cell2.second)};
+        }
+        if (bridge1.first == r && bridge1.second == c) {
+            swap(bridge1, bridge2);
+        }
+        int cell_state1 = (int)get_cell(cell1), cell_state2 = (int)get_cell(cell2);
+        // if cells are same color
+        if (cell_state1 * cell_state2 > 0) {
+            // if cell is white
+            if (cell_state1 < 0) {
+                bridge_white[to_index(cell1)] = to_index(cell2);
+                bridge_white[to_index(cell2)] = to_index(cell1);
+            } else {
+                bridge_black[to_index(cell1)] = to_index(cell2);
+                bridge_black[to_index(cell2)] = to_index(cell1);
+            }
+        }
     }
 }
 
@@ -88,11 +125,12 @@ void Node::expand(HexBoard& board) {
     HexState* child_state = new HexState();
     child_state->copy_from(*state);
     board.move(*child_state, move);
-
     Node* child = new Node(child_state);
     for (int j = 0; j < BOARD_SIZE; j++) {
-        child->bridge[j] = bridge[j];
+        child->bridge_white[j] = bridge_white[j];
+        child->bridge_black[j] = bridge_black[j];
     }
+    child->update_bridges(move);
     child->move_number = move;
     child->parent = this;
     children.push_back(child);

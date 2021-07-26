@@ -14,7 +14,8 @@ struct Node {
     int wins = 0;
     int games = 0;
     int move_number = 0;
-    int bridge[BOARD_SIZE];
+    int bridge_white[BOARD_SIZE];
+    int bridge_black[BOARD_SIZE];
 
     Node* parent = NULL;
     std::vector<Node*> children;
@@ -30,6 +31,7 @@ struct Node {
     Node* select();  // selection
     void expand(HexBoard& board);
     Player randomPlayout(HexBoard& board);  // find winner of random game (simulate)
+    CellState get_cell(std::pair<int, int> p);
 
     int bestChildIndex();
     bool isLeaf() {
