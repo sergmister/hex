@@ -25,6 +25,8 @@ struct Node {
     ~Node();
     // Node(const Node& node);
     Node(HexState* state);
+    // in the case of a bridge, force node to have one child
+    Node(HexState* state, int only_child);
     HexState* state;
     void update_bridges(int move);
     void backpropagate(Player winner);
