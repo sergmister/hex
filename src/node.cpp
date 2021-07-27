@@ -31,9 +31,12 @@ Node::Node(HexState* state) : Node() {
         }
     }
     auto rng = std::default_random_engine{};
-    // std::shuffle(std::begin(child_moves), std::end(child_moves), rng);
+    std::shuffle(std::begin(child_moves), std::end(child_moves), rng);
 }
-Node::Node(HexState* state, int only_child) : Node() { child_moves.push_back(only_child); }
+Node::Node(HexState* state, int only_child) : Node() {
+    this->state = state;
+    child_moves.push_back(only_child);
+}
 
 Node* Node::select() {
     Node* best = this;
@@ -87,8 +90,6 @@ void Node::update_bridges(int move) {
     for (int i = 0; i < neighbors.size(); i++) {
         std::pair<int, int> cell1 = pairs[i].first, cell2 = pairs[i].second;
         if (!in_bound(cell1) || !in_bound(cell2)) continue;
-        assert(to_index(cell1) >= 0 && to_index(cell1) < BOARD_SIZE && to_index(cell2) >= 0 &&
-               to_index(cell2) < BOARD_SIZE);
         if (state->board[to_index(cell1)] != CellState::Empty || state->board[to_index(cell2)] != CellState::Empty) {
             continue;
         }
@@ -118,9 +119,11 @@ void Node::update_bridges(int move) {
             } else {
                 bridge = bridge_black;
             }
+            if (bridge[to_index(cell1)] == -1 && bridge[to_index(cell2)] == -1) {
+                bridge[to_index(cell1)] = to_index(cell2);
+                bridge[to_index(cell2)] = to_index(cell1);
+            }
         }
-        bridge[to_index(cell1)] = to_index(cell2);
-        bridge[to_index(cell2)] = to_index(cell1);
     }
 }
 
@@ -133,10 +136,12 @@ void Node::expand(HexBoard& board) {
     child_state->copy_from(*state);
     board.move(*child_state, move);
     Node* child;
-    if (state->currentPlayer == Player::Black && bridge_white[move] != -1) {
-        child = new Node(child_state, move);
-    } else if (state->currentPlayer == Player::White && bridge_black[move] != -1) {
-        child = new Node(child_state, move);
+    if (state->currentPlayer == Player::Black && bridge_white[move] != -1 &&
+        state->board[bridge_white[move]] == CellState::Empty) {
+        child = new Node(child_state, bridge_white[move]);
+    } else if (state->currentPlayer == Player::White && bridge_black[move] != -1 &&
+               state->board[bridge_black[move]] == CellState::Empty) {
+        child = new Node(child_state, bridge_black[move]);
     } else {
         child = new Node(child_state);
     }
