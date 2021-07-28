@@ -182,7 +182,15 @@ Player Node::randomPlayout(HexBoard& board) {
     std::shuffle(std::begin(moves), std::end(moves), rng);
 
     for (int i = 0; i < moves.size(); i++) {
-        if (board.move(*copyState, moves[i])) {
+        int move = moves[i];
+        if (copyState->currentPlayer == Player::Black && bridge_white[move] != -1 &&
+            state->board[bridge_white[move]] == CellState::Empty) {
+            move = bridge_white[move];
+        } else if (state->currentPlayer == Player::White && bridge_black[move] != -1 &&
+                   state->board[bridge_black[move]] == CellState::Empty) {
+            move = bridge_black[move];
+        }
+        if (copyState->board[move] == CellState::Empty && board.move(*copyState, moves[i])) {
             break;
         }
     }
