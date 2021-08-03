@@ -11,11 +11,15 @@ void MCTS::move(int i) {
     for (Node* child : rootNode->children) {
         if (child->move_number == i) {
             rootNode = child;
+            rootState = child->state;
             return;
         }
     }
+    delete rootNode;
+    board.move(*rootState, i);
+    rootNode = new Node(rootState);
 }
-int MCTS::best_move() { return best_move(30000); }
+int MCTS::best_move() { return best_move(10000); }
 int MCTS::best_move(int simulations) {
     for (int i = 0; i < simulations; i++) {
         Node* node = rootNode->select();
